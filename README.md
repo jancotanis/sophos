@@ -70,6 +70,27 @@ roles = client.roles
 |.billing_usage(year, month)	  |/partner/v1/billing-usage/{year}/{month}|
 
 
+### Common
+This is the OAS 3.0 specification for the Common API in Sophos Central.
+
+```
+@client = Sophos.client()
+@client.login
+ :
+tenant = @client.tenant(id)
+# create client for tenant
+@client.client(tenant).endpoints
+
+```
+
+|Resource|API endpoint|
+|:--|:--|
+|.alerts, .alert(id)								|.../alerts/|
+|.directory_user_groups, .directory_user_groups(id)	|.../directory/user-groups|
+|.directory_user_group_users(id)					|.../directory/user-groups/{id}/users|
+|.directory_users, .directory_user(id)				|.../directory/users|
+|.directory_user_groups(id)							|.../directory/users/{id}/groups|
+
 ### Endpoints
 Returns endpoint for a provided tenant
 ```
@@ -83,7 +104,6 @@ tenant = @client.tenant(id)
 
 |Resource|API endpoint|
 |:--|:--|
-
 |.downloads								|.../downloads/|
 |.endpoint_groups, .endpoint_group(id)	|.../endpoint-groupss/|
 |.migrations, .migration(id)			|.../migrations|

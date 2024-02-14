@@ -15,13 +15,14 @@ describe 'client tenant api' do
       config.client_secret = ENV['SOPHOS_CLIENT_SECRET']
       config.logger = Logger.new(CLIENT_ENDP_LOGGER)
     end
-    @client = Sophos.client({page_size: 25})
-    @client.login
+    client = Sophos.client({page_size: 25})
+    client.login
 
-    @tenants = @client.tenants
-    @tenant = @tenants.first
-    @tenant.id = "aae98952-ccb1-4c13-bd9b-88c4fefc8d57"
-    @tc = @client.tenant_client( @tenant.apiHost, @tenant.id )
+    tenants = client.tenants
+    tenant = tenants.first
+    #tenant.id = "aae98952-ccb1-4c13-bd9b-88c4fefc8d57"
+    # get client for tenant
+    @tc = client.client(tenant)
   end
 
   it '#1 GET downloads' do
@@ -37,7 +38,7 @@ describe 'client tenant api' do
   end
 
   # TODO test tenant set has no groups
-  it '#2 GET endpoint groups' do
+  it '#3 GET endpoint groups' do
     egs = @tc.endpoint_groups()
     if egs.count > 0
       refute egs.first.id, 'egs.first.id'
@@ -54,7 +55,7 @@ describe 'client tenant api' do
     assert value(@tc.endpoint_group_endpoints('00aa8888-333b-45a2-1234-88888bc99999')).must_equal([]), "no flunk as this returns empty array of endpoints"
   end
 
-  it '#3 GET migrations' do
+  it '#4 GET migrations' do
     m = @tc.migrations
     if m.count > 0
       assert m.first.id , 'migration.first.id'
@@ -66,7 +67,7 @@ describe 'client tenant api' do
       flunk "migration should not exist"
     end
   end
-  it '#4 GET policies' do
+  it '#5 GET policies' do
     p = @tc.policies
     if p.count > 0
       assert p.first.name , 'policies.first.name'
@@ -78,7 +79,7 @@ describe 'client tenant api' do
       flunk "migration should not exist"
     end
   end
-  it '#5 GET endpoints' do
+  it '#6 GET endpoints' do
     ep = @tc.endpoints
     if ep.count > 0
       endp = ep.first
@@ -89,7 +90,7 @@ describe 'client tenant api' do
       assert tamper.enabled || !tamper.enabled, "tamper.enabled"
     end
   end
-  it '#6 GET alerts' do
+  it '#7 GET alerts' do
     alerts = @tc.alerts
     if alerts.count > 0
       alert = alerts.first
