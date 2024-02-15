@@ -2,8 +2,8 @@ require 'dotenv'
 require 'logger'
 require 'test_helper'
 
-CLIENT_ENDP_LOGGER = "client_endpoints_test.log"
-File.delete(CLIENT_ENDP_LOGGER) if File.exist?(CLIENT_ENDP_LOGGER)
+CLIENT_TNT_LOGGER = "client_tenants_test.log"
+File.delete(CLIENT_TNT_LOGGER) if File.exist?(CLIENT_TNT_LOGGER)
 
 
 describe 'client tenant api' do
@@ -13,15 +13,16 @@ describe 'client tenant api' do
     Sophos.configure do |config|
       config.client_id = ENV['SOPHOS_CLIENT_ID']
       config.client_secret = ENV['SOPHOS_CLIENT_SECRET']
-      config.logger = Logger.new(CLIENT_ENDP_LOGGER)
+      config.logger = Logger.new(CLIENT_TNT_LOGGER)
     end
     client = Sophos.client({page_size: 25})
     client.login
-
-    tenants = client.tenants
-    tenant = tenants.first
-    #tenant.id = "aae98952-ccb1-4c13-bd9b-88c4fefc8d57"
-    # get client for tenant
+    test_tenant = ENV['TEST_TENANT']
+    if test_tenant
+      tenant = client.tenant(test_tenant)
+    else
+      tenant = client.tenants.first
+    end
     @tc = client.client(tenant)
   end
 
@@ -94,6 +95,8 @@ describe 'client tenant api' do
     alerts = @tc.alerts
     if alerts.count > 0
       alert = alerts.first
+      high_alerts = @tc.alerts({ severity: alert.severity })
+      assert high_alerts.count <= alerts.count, "filtering severe '#{alert.severity}' alerts"
     end
   end
 end
