@@ -6,3 +6,5 @@
 ## [0.1.1] - 2024-02-14
 - Convienience method added to get client for a teannt api host
 
+## [0.1.2] - 2024-02-15
+- Fix initialization issue
