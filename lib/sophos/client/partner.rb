@@ -7,28 +7,6 @@ module Sophos
     # @see https://developer.sophos.com/docs/partner-v1/1/overview
     module Partner
 
-      def self.__def_partner_call(method, id_field = nil)
-        if id_field
-          self.send(:define_method, method) do |id = nil|
-            url = partner_url(method)
-            if id
-              get(partner_url("#{method}/#{id}"))
-            else
-              get_paged(url)
-            end
-          end
-          # strip trailing 's'
-          singular = method.to_s.chop.to_sym
-          self.send(:define_method, singular) do |id, params = nil|
-            get(partner_url("#{method}/#{id}", params))
-          end
-        else
-          self.send(:define_method, method) do
-            get_paged(partner_url(method))
-          end
-        end
-      end
-
       # @see https://developer.sophos.com/docs/partner-v1/1/routes/tenants/get
       Helper::def_api_call :tenants, Helper::partner_url(:tenants), true
 
@@ -61,11 +39,6 @@ module Sophos
         get_paged(Helper::partner_url("billing/usage/#{year}/#{month}"), params)
       end
 
-    private
-
-      def __partner_url(method, id = nil)
-        "/partner/v1/#{method}"
-      end
     end
   end
 end
