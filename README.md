@@ -9,7 +9,7 @@ Currently only the GET requests to customers, endpoints and alerts are implement
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'sophos_partner_api'
+gem 'sophos_central_api'
 ```
 
 And then execute:
@@ -18,14 +18,14 @@ And then execute:
 
 Or install it yourself as:
 
-    $ gem install sophos_partner_api
+    $ gem install sophos_central_api
 
 ## Usage
 
 Before you start making the requests to API provide the client id and client secret and email/password using the configuration wrapping.
 
 ```
-require 'sophos_partner_api'
+require 'sophos_central_api'
 
 Sophos.configure do |config|
   config.client_id = ENV["SOPHOS_CLIENT_ID"]
