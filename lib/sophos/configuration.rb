@@ -7,7 +7,7 @@ module Sophos
   module Configuration
     include WrAPI::Configuration
 
-    # An array of additional valid keys in the options hash when configuring a {Sophos::API}
+    # An array of additional valid keys in the options hash when configuring a [Sophos::API]
     VALID_OPTIONS_KEYS = (WrAPI::Configuration::VALID_OPTIONS_KEYS + [:partner_id, :tenant_id, :id_endpoint]).freeze
 
     # @private
