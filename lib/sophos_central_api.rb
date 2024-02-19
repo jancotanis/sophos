@@ -9,6 +9,6 @@ module Sophos
   #
   # @return [Sophos::Client]
   def self.client(options = {})
-    Sophos::Client.new
+    Sophos::Client.new(options)
   end
 end
