@@ -11,23 +11,23 @@ module Sophos
       Helper::def_api_call :downloads, Helper::endpoint_url(:downloads)
 
       # @see https://developer.sophos.com/docs/endpoint-v1/1/routes/endpoint-groups/get
-      Helper::def_api_call :endpoint_groups, Helper::endpoint_url(:endpoint_groups), true
+      Helper::def_api_call :endpoint_groups, Helper::endpoint_url(:endpoint_groups), :endpoint_group
       def endpoint_group_endpoints(group_id)
         get_paged Helper::endpoint_url("endpoint-groups/#{group_id}/endpoints")
       end
 
       # @see https://developer.sophos.com/docs/endpoint-v1/1/routes/migrations/get
-      Helper::def_api_call :migrations, Helper::endpoint_url(:migrations), true
+      Helper::def_api_call :migrations, Helper::endpoint_url(:migrations), :migration
       def migration_endpoints(migration_id)
         get_paged Helper::endpoint_url("migrations/#{migration_id}/endpoints")
       end
 
       # @see https://developer.sophos.com/docs/endpoint-v1/1/routes/policies/get
-      Helper::def_api_call :policies, Helper::endpoint_url(:policies), true
+      Helper::def_api_call :policies, Helper::endpoint_url(:policies), :policy
 
       # Get all the endpoints for the specified tenant. No endpoint method defined as this clashes with api endpoint method
       # @see https://developer.sophos.com/docs/endpoint-v1/1/routes/endpoints/get
-      Helper::def_api_call :endpoints, Helper::endpoint_url(:endpoints), false
+      Helper::def_api_call :endpoints, Helper::endpoint_url(:endpoints)
       def endpoint_isolation(endpoint_id)
         get Helper::endpoint_url("endpoints/#{endpoint_id}/isolation")
       end

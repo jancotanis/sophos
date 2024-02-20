@@ -77,7 +77,7 @@ describe 'client tenant api' do
     # record should not exist
     assert_raises Faraday::ResourceNotFound do
       @tc.policy('00aa8888-333b-45a2-1234-88888bc99999')
-      flunk "migration should not exist"
+      flunk "policy should not exist"
     end
   end
   it '#6 GET endpoints' do

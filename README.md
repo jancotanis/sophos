@@ -1,4 +1,7 @@
 # Sophos Central Partner API
+[![Version](https://img.shields.io/gem/v/sophos_central_api.svg)](https://rubygems.org/gems/sophos_central_api)
+[![Maintainability](https://api.codeclimate.com/v1/badges/0e0c212559aad49a915c/maintainability)](https://codeclimate.com/github/jancotanis/sophos/maintainability)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/0e0c212559aad49a915c/test_coverage)](https://codeclimate.com/github/jancotanis/sophos/test_coverage)
 
 This is a wrapper for the Sophos Central Partner API. You can see the API endpoints here https://developer.sophos.com/getting-started
 

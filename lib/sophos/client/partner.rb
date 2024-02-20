@@ -8,13 +8,13 @@ module Sophos
     module Partner
 
       # @see https://developer.sophos.com/docs/partner-v1/1/routes/tenants/get
-      Helper::def_api_call :tenants, Helper::partner_url(:tenants), true
+      Helper::def_api_call :tenants, Helper::partner_url(:tenants), :tenant
 
       # @see https://developer.sophos.com/docs/partner-v1/1/routes/roles/get
-      Helper::def_api_call :roles, Helper::partner_url(:roles), true
+      Helper::def_api_call :roles, Helper::partner_url(:roles), :role
 
       # @see https://developer.sophos.com/docs/partner-v1/1/routes/admins/get
-      Helper::def_api_call :admins, Helper::partner_url(:admins), true
+      Helper::def_api_call :admins, Helper::partner_url(:admins), :admin
 
       # Get the list of role assignments for given admin.
       # @see https://developer.sophos.com/docs/partner-v1/1/routes/admins/%7BadminId%7D/role-assignments/get

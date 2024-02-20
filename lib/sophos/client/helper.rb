@@ -8,26 +8,17 @@ module Sophos
         method_name.to_s.gsub('_', '-')
       end
 
-      def self.singular method_name
-        method_name = method_name.to_s.gsub(/s$/, '') 
-        method_name.gsub(/ie$/, 'y').to_sym
-      end
-
-      def self.common_url(method)
-        "/common/v1/#{sanitize(method)}"
-      end
-
-      def self.endpoint_url(method)
-        "/endpoint/v1/#{sanitize(method)}"
-      end
-
-      def self.partner_url(method)
-        "/partner/v1/#{sanitize(method)}"
+      def self.common_url(method) self.url('common', method); end
+      def self.endpoint_url(method) self.url('endpoint', method); end
+      def self.partner_url(method) self.url('partner', method); end
+      
+      def self.url(api,method)
+        "/#{api}/v1/#{sanitize(method)}"
       end
 
       # generate end point for 'endpoint' and 'endpoints'
-      def self.def_api_call(method, url, id_field = false, paged = true)
-        if id_field
+      def self.def_api_call(method, url, singular_method = nil, paged = true)
+        if singular_method
           self.send(:define_method, method) do |id = nil, params = {}|
             if id
               get("#{url}/#{id}", params)
@@ -36,8 +27,7 @@ module Sophos
             end
           end
           # strip trailing 's'
-          singlr = self.singular(method) #method.to_s.chop.to_sym
-          self.send(:define_method, singlr) do |id, params = {}|
+          self.send(:define_method, singular_method) do |id, params = {}|
             get("#{url}/#{id}", params)
           end
         else
