@@ -8,3 +8,6 @@
 
 ## [0.1.2] - 2024-02-15
 - Fix initialization issue
+
+## [0.2.0] - 2024-02-20
+- Configuration and authentication exceptions changed

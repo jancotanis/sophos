@@ -13,7 +13,7 @@ describe 'auth' do
   end
   it "#1 not logged in" do
     c = Sophos.client
-    assert_raises StandardError do
+    assert_raises Sophos::ConfigurationError do
       c.login
     end
   end
@@ -32,7 +32,17 @@ describe 'auth' do
       config.password = "doe"
     end
     c = Sophos.client
-    assert_raises StandardError do
+    assert_raises Sophos::ConfigurationError do
+      c.login
+    end
+  end
+  it "#3 wrong credentials" do
+    Sophos.configure do |config|
+      config.client_id = "john"
+      config.client_secret = "doe"
+    end
+    c = Sophos.client
+    assert_raises Sophos::AuthenticationError do
       c.login
     end
   end

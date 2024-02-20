@@ -1,5 +1,7 @@
+require 'faraday'
 require 'json'
 require 'uri'
+require File.expand_path('error', __dir__)
 
 module Sophos
   # Deals with authentication flow and stores it within global configuration
@@ -8,6 +10,7 @@ module Sophos
     # Authorize to the Sophos portal and return access_token
     # @see https://developer.sophos.com/getting-started
     def auth_token(options = {})
+      raise ConfigurationError.new 'Client id and/or secret not configured' unless client_id && client_secret
       # use id endpoint instead of global api
       response = connection.post(id_endpoint+'/api/v2/oauth2/token') do |request|
         request.headers['Content-Type'] = 'application/x-www-form-urlencoded'
@@ -22,8 +25,10 @@ module Sophos
         self.endpoint = partner.apiHosts.global
         self.connection_options = { headers: { 'X-partner-id': self.partner_id } }
       else
-        raise raise StandardError.new 'Partner id not returned; response ' + response.to_s
+        raise AuthenticationError.new 'Partner id not returned; response ' + response.to_s
       end
+    rescue Faraday::UnauthorizedError => e
+        raise AuthenticationError.new 'Unauthorized; response ' + e.to_s
     end
     alias login auth_token
 
@@ -43,7 +48,7 @@ module Sophos
       self.token_type        = response['token_type']
       self.refresh_token     = response['refresh_token']
       self.token_expires     = response['expires_in']
-      raise StandardError.new 'Could not find valid access_token; response ' + response.to_s if at.nil? || at.empty?
+      raise AuthenticationError.new 'Could not find valid access_token; response ' + response.to_s if at.nil? || at.empty?
 
       at
     end
