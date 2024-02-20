@@ -27,7 +27,7 @@ Or install it yourself as:
 
 Before you start making the requests to API provide the client id and client secret and email/password using the configuration wrapping.
 
-```
+```ruby
 require 'sophos_central_api'
 
 Sophos.configure do |config|
@@ -46,7 +46,7 @@ end
 
 ## Resources
 ### Authentication
-```
+```ruby
 # setup configuration
 #
 client.login
@@ -58,7 +58,7 @@ client.login
 
 ### Partner
 Endpoint for partner  related requests 
-```
+```ruby
 roles = client.roles
 ```
 
@@ -76,7 +76,7 @@ roles = client.roles
 ### Common
 This is the OAS 3.0 specification for the Common API in Sophos Central.
 
-```
+```ruby
 @client = Sophos.client()
 @client.login
  :
@@ -96,7 +96,7 @@ tenant = @client.tenant(id)
 
 ### Endpoints
 Returns endpoint for a provided tenant
-```
+```ruby
 @client = Sophos.client()
 @client.login
  :
