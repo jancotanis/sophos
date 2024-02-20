@@ -17,18 +17,13 @@ module Sophos
         request.body = URI.encode_www_form( api_access_token_params )
       end
       api_process_token(response.body)
-
+      setup_connection
       # use default endpoint and replace it with global endpoint
-      partner = self.get( "/whoami/v1" )
-      if 'partner'.eql?(partner.idType) && partner.id
-        self.partner_id = partner.id
-        self.endpoint = partner.apiHosts.global
-        self.connection_options = { headers: { 'X-partner-id': self.partner_id } }
-      else
-        raise AuthenticationError.new 'Partner id not returned; response ' + response.to_s
-      end
+      self.access_token
+
     rescue Faraday::UnauthorizedError => e
-        raise AuthenticationError.new 'Unauthorized; response ' + e.to_s
+
+      raise AuthenticationError.new 'Unauthorized; response ' + e.to_s
     end
     alias login auth_token
 
@@ -44,13 +39,23 @@ module Sophos
     end
 
     def api_process_token(response)
-      at = self.access_token = response['access_token']
-      self.token_type        = response['token_type']
-      self.refresh_token     = response['refresh_token']
-      self.token_expires     = response['expires_in']
-      raise AuthenticationError.new 'Could not find valid access_token; response ' + response.to_s if at.nil? || at.empty?
+      self.access_token  = response['access_token']
+      self.token_type    = response['token_type']
+      self.refresh_token = response['refresh_token']
+      self.token_expires = response['expires_in']
 
-      at
+      raise AuthenticationError.new 'Could not find valid access_token; response ' + response.to_s if self.access_token.nil? || self.access_token.empty?
+    end
+    
+    def setup_connection
+      partner = self.get( "/whoami/v1" )
+      if 'partner'.eql?(partner.idType) && partner.id
+        self.partner_id = partner.id
+        self.endpoint = partner.apiHosts.global
+        self.connection_options = { headers: { 'X-partner-id': self.partner_id } }
+      else
+        raise AuthenticationError.new 'Partner id not returned; response ' + partner.to_s
+      end
     end
   end
 end
