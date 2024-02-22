@@ -1,9 +1,9 @@
 module Sophos
 	
-  # Generic error to be able to rescue all Zabbix errors
+  # Generic error to be able to rescue all Sophos errors
   class SophosError < StandardError; end
 
-  # Raised when Zabbix not configured correctly
+  # Raised when Sophos not configured correctly
   class ConfigurationError < SophosError; end
 
   # Error when authentication fails
