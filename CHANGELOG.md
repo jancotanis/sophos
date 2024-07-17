@@ -11,3 +11,6 @@
 
 ## [0.2.0] - 2024-02-20
 - Configuration and authentication exceptions changed
+
+## [0.2.1] - 2024-07-17
+- Fix issue with paging for endpoints

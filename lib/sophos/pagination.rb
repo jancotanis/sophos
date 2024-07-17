@@ -24,10 +24,13 @@ module Sophos
         # ignore page size
         @page_size = page_size
         @total = @current = 1
+        @nextKey = nil
       end
 
       def page_options
-        { 'page': @current, 'pageSize': @page_size, 'pageTotal': true }
+        options = { 'page': @current, 'pageSize': @page_size, 'pageTotal': true }
+        options = options.merge({ 'pageFromKey': @nextKey }) if @current > 1
+        options
       end
 
       def next_page!(data)
@@ -40,6 +43,7 @@ module Sophos
           else
             @current += 1
           end
+          @nextKey = pages['nextKey'] if pages['nextKey']
         else
           # no page info so assume single page request
           @total = 0
