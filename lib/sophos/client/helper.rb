@@ -19,27 +19,37 @@ module Sophos
       # generate end point for 'endpoint' and 'endpoints'
       def self.def_api_call(method, url, singular_method = nil, paged = true)
         if singular_method
-          self.send(:define_method, method) do |id = nil, params = {}|
-            if id
-              get("#{url}/#{id}", params)
-            else
-              get_paged(url, params)
-            end
-          end
-          # strip trailing 's'
-          self.send(:define_method, singular_method) do |id, params = {}|
-            get("#{url}/#{id}", params)
-          end
+          self.singular_method(method,url,singular_method)
         else
           if paged
-            self.send(:define_method, method) do |params = {}|
-              get_paged(url, params)
-            end
+            self.paged_method(method,url)
           else
-            self.send(:define_method, method) do |params = {}|
-              get(url, params)
-            end
+            self.plain_method(method,url)
           end
+        end
+      end
+      
+      def self.singular_method(method,url,singular_method)
+        self.send(:define_method, method) do |id = nil, params = {}|
+          if id
+            get("#{url}/#{id}", params)
+          else
+            get_paged(url, params)
+          end
+        end
+        # strip trailing 's'
+        self.send(:define_method, singular_method) do |id, params = {}|
+          get("#{url}/#{id}", params)
+        end
+      end
+      def self.paged_method(method,url)
+        self.send(:define_method, method) do |params = {}|
+          get_paged(url, params)
+        end
+      end
+      def self.plain_method(method,url)
+        self.send(:define_method, method) do |params = {}|
+          get(url, params)
         end
       end
 
