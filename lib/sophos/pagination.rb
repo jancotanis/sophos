@@ -34,16 +34,9 @@ module Sophos
       end
 
       def next_page!(data)
-
         pages = page_info(data)
         if pages
-          @total = pages['total'].to_i
-          if pages['current']
-            @current = pages['current'].to_i + 1
-          else
-            @current += 1
-          end
-          @nextKey = pages['nextKey'] if pages['nextKey']
+          set_page_state(pages)
         else
           # no page info so assume single page request
           @total = 0
@@ -61,6 +54,20 @@ module Sophos
       # only single page available
       def more_pages?
         @current <= @total
+      end
+
+    private
+      def set_page_state(pages)
+        @total = pages['total'].to_i
+        if pages['current']
+          @current = pages['current'].to_i + 1
+        else
+          @current += 1
+        end
+        # used for endpoints api
+        if pages['nextKey']
+          @nextKey = pages['nextKey'] 
+        end
       end
     end
   end
