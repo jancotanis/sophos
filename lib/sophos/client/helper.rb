@@ -1,59 +1,86 @@
+# frozen_string_literal: true
+
 module Sophos
-  
-  # Generate generic api methods
+  # Generate generic API methods dynamically for various Sophos APIs.
   class Client
     module Helper
 
-      def self.sanitize method_name
-        method_name.to_s.gsub('_', '-')
+      # Convert method names to URL-safe format (e.g., 'user_groups' => 'user-groups')
+      # @param method_name [Symbol, String] Method name to be sanitized
+      # @return [String] Sanitized method name for use in URL paths
+      def self.sanitize(method_name)
+        method_name.to_s.tr('_', '-')
       end
 
-      def self.common_url(method) self.url('common', method); end
-      def self.endpoint_url(method) self.url('endpoint', method); end
-      def self.partner_url(method) self.url('partner', method); end
-      
-      def self.url(api,method)
+      # Generate a URL path for the common API
+      # @param method [Symbol, String] Method name for the API endpoint
+      # @return [String] Full path for the common API endpoint
+      def self.common_url(method)
+        url('common', method)
+      end
+
+      # Generate a URL path for the endpoint API
+      def self.endpoint_url(method)
+        url('endpoint', method)
+      end
+
+      # Generate a URL path for the partner API
+      def self.partner_url(method)
+        url('partner', method)
+      end
+
+      # Generic method to generate API URLs
+      # @param api [String] API type (e.g., 'common', 'endpoint', 'partner')
+      # @param method [Symbol, String] Endpoint method name
+      # @return [String] Full API URL path
+      def self.url(api, method)
         "/#{api}/v1/#{sanitize(method)}"
       end
 
-      # generate end point for 'endpoint' and 'endpoints'
+      # Dynamically define API methods for both singular and plural endpoints.
+      # It supports paginated or non-paginated responses.
+      #
+      # @param method [Symbol] Plural method name (e.g., `:alerts`)
+      # @param url [String] Endpoint URL path
+      # @param singular_method [Symbol, nil] Singular method name (e.g., `:alert`), optional
+      # @param paged [Boolean] If true, generate paginated API calls (default: true)
       def self.def_api_call(method, url, singular_method = nil, paged = true)
         if singular_method
-          self.singular_method(method,url,singular_method)
+          define_singular_and_plural_methods(method, url, singular_method)
         else
-          if paged
-            self.paged_method(method,url)
-          else
-            self.plain_method(method,url)
-          end
+          paged ? define_paged_method(method, url) : define_plain_method(method, url)
         end
       end
-      
-      def self.singular_method(method,url,singular_method)
-        self.send(:define_method, method) do |id = nil, params = {}|
-          if id
-            get("#{url}/#{id}", params)
-          else
-            get_paged(url, params)
-          end
+
+      private
+
+      # Define both singular and plural methods.
+      # Example: `alerts` (for paginated results) and `alert(id)` (for single alert).
+      def self.define_singular_and_plural_methods(method, url, singular_method)
+        # Define plural method: paginated call if no ID, otherwise fetch singular resource.
+        define_method(method) do |id = nil, params = {}|
+          id ? get("#{url}/#{id}", params) : get_paged(url, params)
         end
-        # strip trailing 's'
-        self.send(:define_method, singular_method) do |id, params = {}|
+
+        # Define singular method explicitly for single resource retrieval.
+        define_method(singular_method) do |id, params = {}|
           get("#{url}/#{id}", params)
         end
       end
-      def self.paged_method(method,url)
-        self.send(:define_method, method) do |params = {}|
+
+      # Define a paginated method for list-based API endpoints.
+      def self.define_paged_method(method, url)
+        define_method(method) do |params = {}|
           get_paged(url, params)
         end
       end
-      def self.plain_method(method,url)
-        self.send(:define_method, method) do |params = {}|
+
+      # Define a simple, non-paginated API method.
+      def self.define_plain_method(method, url)
+        define_method(method) do |params = {}|
           get(url, params)
         end
       end
-
     end
   end
-
 end

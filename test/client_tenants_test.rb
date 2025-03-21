@@ -1,21 +1,20 @@
-require 'dotenv'
+# frozen_string_literal: true
+
 require 'logger'
 require 'test_helper'
 
-CLIENT_TNT_LOGGER = "client_tenants_test.log"
+CLIENT_TNT_LOGGER = 'client_tenants_test.log'
 File.delete(CLIENT_TNT_LOGGER) if File.exist?(CLIENT_TNT_LOGGER)
-
 
 describe 'client tenant api' do
   before do
-    Dotenv.load
     Sophos.reset
     Sophos.configure do |config|
       config.client_id = ENV['SOPHOS_CLIENT_ID']
       config.client_secret = ENV['SOPHOS_CLIENT_SECRET']
       config.logger = Logger.new(CLIENT_TNT_LOGGER)
     end
-    client = Sophos.client({page_size: 25})
+    client = Sophos.client({ page_size: 25 })
     client.login
     test_tenant = ENV['TEST_TENANT']
     if test_tenant
@@ -32,16 +31,15 @@ describe 'client tenant api' do
   end
 
   it '#2 GET endpoint groups' do
-    egs = @tc.endpoint_groups()
-    if egs.count > 0
-      refute egs.first.id , 'egs.first.id'
-    end
+    egs = @tc.endpoint_groups
+
+    refute egs.first.id, 'egs.first.id' if egs.any?
   end
 
-  # TODO test tenant set has no groups
+  # TODO: test tenant set has no groups
   it '#3 GET endpoint groups' do
     egs = @tc.endpoint_groups()
-    if egs.count > 0
+    if egs.any?
       refute egs.first.id, 'egs.first.id'
       # at least call method
       @tc.endpoint_group_endpoints(egs.first.id)
@@ -50,50 +48,47 @@ describe 'client tenant api' do
     # record should not exist
     assert_raises Faraday::ResourceNotFound do
       @tc.endpoint_group('00aa8888-333b-45a2-1234-88888bc99999')
-      flunk "endpointgroup(0) should not exist"
+      flunk 'endpointgroup(0) should not exist'
     end
     # record should not exist but returns empty array
-    assert value(@tc.endpoint_group_endpoints('00aa8888-333b-45a2-1234-88888bc99999')).must_equal([]), "no flunk as this returns empty array of endpoints"
+    assert value(@tc.endpoint_group_endpoints('00aa8888-333b-45a2-1234-88888bc99999')).must_equal([]), 'no flunk as this returns empty array of endpoints'
   end
 
   it '#4 GET migrations' do
-    m = @tc.migrations
-    if m.count > 0
-      assert m.first.id , 'migration.first.id'
-    end
+    mig = @tc.migrations
+
+    assert m.first.id , 'migration.first.id' if mig.any?
 
     # record should not exist
     assert_raises Faraday::ResourceNotFound do
       @tc.migration('00aa8888-333b-45a2-1234-88888bc99999')
-      flunk "migration should not exist"
+      flunk 'migration should not exist'
     end
   end
   it '#5 GET policies' do
     p = @tc.policies
-    if p.count > 0
-      assert p.first.name , 'policies.first.name'
-    end
+    assert p.first.name , 'policies.first.name' if p.any?
 
     # record should not exist
     assert_raises Faraday::ResourceNotFound do
       @tc.policy('00aa8888-333b-45a2-1234-88888bc99999')
-      flunk "policy should not exist"
+      flunk 'policy should not exist'
     end
   end
   it '#6 GET endpoints' do
     ep = @tc.endpoints
-    if ep.count > 0
+    if ep.any?
       endp = ep.first
-      assert endp.hostname , 'endpoints.first.hostname'
+      assert endp.hostname, 'endpoints.first.hostname'
       isolation = @tc.endpoint_isolation(endp.id)
-      assert isolation.enabled || !isolation.enabled, "isolation.enabled"
+      assert isolation.enabled || !isolation.enabled, 'isolation.enabled'
       tamper = @tc.endpoint_tamper_protection(endp.id)
-      assert tamper.enabled || !tamper.enabled, "tamper.enabled"
+      assert tamper.enabled || !tamper.enabled, 'tamper.enabled'
     end
   end
   it '#7 GET alerts' do
     alerts = @tc.alerts
-    if alerts.count > 0
+    if alerts.any?
       alert = alerts.first
       high_alerts = @tc.alerts({ severity: alert.severity })
       assert high_alerts.count <= alerts.count, "filtering severe '#{alert.severity}' alerts"
