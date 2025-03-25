@@ -66,7 +66,6 @@ client.login
 |:--|:--|:--|
 |.login|||
 
-
 ### Partner
 
 Endpoint for partner  related requests
@@ -82,8 +81,8 @@ roles = client.roles
 |.admins, .admin(id)              |/partner/v1/admins/{id}|
 |.admin_role_assignments(admin_id)|/partner/v1/admins/{admin_id}/role-assignments|
 |.admin_role_assignment(admin_id,assignment_id)|/partner/v1/admins/{admin_id}/role-assignments/{assignment_id}|
-|.permission_sets				          |/partner/v1/roles/permission-sets|
-|.billing_usage(year, month)	    |/partner/v1/billing-usage/{year}/{month}|
+|.permission_sets                 |/partner/v1/roles/permission-sets|
+|.billing_usage(year, month)      |/partner/v1/billing-usage/{year}/{month}|
 
 ### Common
 
@@ -102,7 +101,7 @@ tenant = @client.tenant(id)
 |Resource|API endpoint|
 |:--|:--|
 |.alerts, .alert(id)                      |.../alerts/|
-|.directory_user_groups, .directory_user_groups(id)	|.../directory/user-groups|
+|.directory_user_groups, .directory_user_groups(id) |.../directory/user-groups|
 |.directory_user_group_users(id)          |.../directory/user-groups/{id}/users|
 |.directory_users, .directory_user(id)    |.../directory/users|
 |.directory_user_groups(id)               |.../directory/users/{id}/groups|

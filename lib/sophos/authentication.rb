@@ -12,7 +12,6 @@ module Sophos
   # @note Ensure that `client_id` and `client_secret` are configured before calling authentication methods.
   # @see https://developer.sophos.com/getting-started
   module Authentication
-
     # Authorizes with the Sophos portal and retrieves an access token.
     # This method performs an OAuth2 client credentials flow, returning a valid token.
     #
@@ -25,7 +24,7 @@ module Sophos
     #   api.auth_token
     #
     def auth_token(_options = {})
-      raise ConfigurationError.new 'Client id and/or secret not configured' unless client_id && client_secret
+      raise ConfigurationError, 'Client id and/or secret not configured' unless client_id && client_secret
 
       # POST request to obtain the OAuth2 token using client credentials
       response = connection.post("#{id_endpoint}/api/v2/oauth2/token") do |request|
@@ -39,7 +38,7 @@ module Sophos
       # Returns the generated access token
       self.access_token
     rescue Faraday::UnauthorizedError => e
-      raise AuthenticationError.new "Unauthorized; response #{e}"
+      raise AuthenticationError, "Unauthorized; response #{e}"
     end
     alias login auth_token
 
@@ -68,7 +67,7 @@ module Sophos
       self.token_expires = response['expires_in']
 
       if self.access_token.nil? || self.access_token.empty?
-        raise AuthenticationError.new "Could not find valid access_token; response #{response}"
+        raise AuthenticationError, "Could not find valid access_token; response #{response}"
       end
     end
 
@@ -85,7 +84,7 @@ module Sophos
         self.endpoint = partner.apiHosts.global
         self.connection_options = { headers: { 'X-partner-id': self.partner_id } }
       else
-        raise AuthenticationError.new "Partner id not returned; response #{partner}"
+        raise AuthenticationError, "Partner id not returned; response #{partner}"
       end
     end
   end

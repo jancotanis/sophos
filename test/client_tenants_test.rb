@@ -57,7 +57,7 @@ describe 'client tenant api' do
   it '#4 GET migrations' do
     mig = @tc.migrations
 
-    assert m.first.id , 'migration.first.id' if mig.any?
+    assert m.first.id, 'migration.first.id' if mig.any?
 
     # record should not exist
     assert_raises Faraday::ResourceNotFound do
@@ -67,7 +67,7 @@ describe 'client tenant api' do
   end
   it '#5 GET policies' do
     p = @tc.policies
-    assert p.first.name , 'policies.first.name' if p.any?
+    assert p.first.name, 'policies.first.name' if p.any?
 
     # record should not exist
     assert_raises Faraday::ResourceNotFound do

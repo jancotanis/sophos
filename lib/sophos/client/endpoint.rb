@@ -8,7 +8,6 @@ module Sophos
     # Module to interact with Sophos Endpoint API
     # @see https://developer.sophos.com/docs/endpoint-v1/1/overview
     module Endpoint
-
       # Define API calls with dynamic helper methods for common endpoints.
 
       # Fetch available software downloads.
